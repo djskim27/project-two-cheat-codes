@@ -16,6 +16,9 @@ app.set('view engine', 'hbs');
 var usersController = require("./controllers/usersController.js");
 app.use('/users', usersController);
 
+const itemsController = require('./controllers/itemsController.js');
+app.use('/users/:userId/items', itemsController);
+
 // Mongoose stuff
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/express-mongoose-lesson-starter');

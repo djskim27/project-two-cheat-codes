@@ -20,7 +20,7 @@ User.remove({}, function(err){
 var danny = new User({
   first_name: 'Danny',
   email: 'danny@gmail.com',
-  items: [{ name: "Take my bike to the shop for maintenance" }]
+  items: []
 });
 
 var maren = new User({
@@ -32,7 +32,7 @@ var maren = new User({
 var diesel = new User({
   first_name: 'Diesel',
   email: 'diesel@gmail.com',
-  items: [{ name: "Go to the dog park" }]
+  items: [{ name: "Go to the dog park" }, { name: "Go to the cat park" }]
 });
 
 // save the users
