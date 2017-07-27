@@ -3,6 +3,14 @@
 <div>Name: {{user.first_name}}</div>
 <div>Email: {{user.email}}</div>
 
+<h2>{{user.first_name}}'s Items</h2>
+{{#each userItems}}
+    <div>
+        {{this.name}}
+        <a href="/users/{{../user._id}}/items/{{this._id}}">Show Item</a>
+    </div>
+{{/each}}
+
 <div>
     <a href="/users/{{user._id}}/delete">Delete</a>
     <a href="/users/{{user._id}}/edit">Edit</a>
