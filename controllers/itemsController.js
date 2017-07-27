@@ -1,6 +1,7 @@
 const express = require('express');
 
 const User = require('../models/user');
+const Item = require('../models/item');
 
 const router = express.Router({ mergeParams: true });
 
@@ -19,6 +20,54 @@ router.get('/', (request, response) => {
                 }
             )
         })
+});
+
+// RENDER THE NEW FORM
+router.get('/new', (request, response) => {
+
+    const userId = request.params.userId;
+
+    response.render(
+        'items/new',
+        { userId }
+    );
+});
+
+router.post('/', (request, response) => {
+    const userId = request.params.userId;
+    const newItemInfo = request.body;
+
+    
+
+    User.findById(userId)
+        .then((user) => {
+            const newItem = new Item(newItemInfo);  
+            console.log('yooooooooo' + newItem);
+            
+            user.items.push(newItem);
+
+            user.save()
+                .then((user) => {
+                    console.log("Saved new user with ID of " + user._id);
+
+                    response.render(
+                        'items/show',
+                        {
+                            userId,
+                            userName: user.first_name,
+                            itemId: newItem._id,
+                            itemName: newItem.name
+                        }
+                    )
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
 });
 
 // SHOW
@@ -94,6 +143,37 @@ router.put('/:itemId', (request, response) => {
                 })
         })
 
+});
+
+// DELETE 
+router.get('/:itemId/delete', (request, response) => {
+    const userId = request.params.userId;
+    const itemId = request.params.itemId;
+
+    User.findById(userId)
+        .then((user) => {
+
+            const itemToDelete = user.items.find((item) => {
+                return item.id === itemId;
+            })
+
+            const indexToDelete = user.items.indexOf(itemToDelete);
+
+            user.items.splice(indexToDelete, 1);
+
+            user.save().then((user) => {
+                console.log("Successfully deleted item with ID of " + itemId + " from user");
+
+                response.render(
+                    'items/index',
+                    {
+                        userId: user._id,
+                        userName: user.first_name,
+                        items: user.items
+                    }
+                )
+            })
+        })
 });
 
 module.exports = router;
