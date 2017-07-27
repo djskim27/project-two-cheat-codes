@@ -46,7 +46,7 @@ router.post('/', (request, response) => {
     return user.save();
 
   }).then((user) => {
-    console.log('Saved new user with ID of ' + user._id);
+    console.log(`Saved new user with ID of ${user._id}`);
 
     response.render(
         'items/show',
@@ -110,34 +110,32 @@ router.put('/:itemId', (request, response) => {
   const userId = request.params.userId;
   const itemId = request.params.itemId;
 
-  User.findById(userId)
-    .then((user) => {
-      const foundItem = user.items.find((item) => {
-        return item.id === itemId;
-      });
-
-      foundItem.name = request.body.name;
-
-      // then save the user and return the promise so we can chain
-      // another .then() block and only use one .catch() block
-      return user.save();
-
-    }).then((user) => {
-      console.log('updated user with ID of ' + user._id);
-
-      response.render(
-          'items/index',
-          {
-            userId: user._id,
-            userName: user.first_name,
-            items: user.items,
-          },
-      );
-    })
-    .catch((error) => {
-      console.log(`Failed to update item with ID of ${itemId}`);
-      console.log(error);
+  User.findById(userId).then((user) => {
+    const foundItem = user.items.find((item) => {
+      return item.id === itemId;
     });
+
+    foundItem.name = request.body.name;
+
+    // then save the user and return the promise so we can chain
+    // another .then() block and only use one .catch() block
+    return user.save();
+
+  }).then((user) => {
+    console.log(`updated user with ID of ${user._id}`);
+
+    response.render(
+        'items/index',
+        {
+          userId: user._id,
+          userName: user.first_name,
+          items: user.items,
+        },
+    );
+  }).catch((error) => {
+    console.log(`Failed to update item with ID of ${itemId}`);
+    console.log(error);
+  });
 });
 
 // DELETE 
